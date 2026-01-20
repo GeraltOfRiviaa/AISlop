@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Přihlášení / Registrace</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* Center the auth card and keep it compact */
+    .auth-page { min-height: calc(100vh - 60px); display:flex; align-items:center; justify-content:center; padding: 16px; }
+    .auth-wrap { width: 100%; max-width: 360px; margin: 0 auto; padding: 16px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .tabs button { background:#1f2937; border-color:#374151; }
+    .tabs button.active { background:#2563eb; border-color:#2563eb; }
+    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    label { font-size: 14px; color:#9ca3af; }
+    input { width:100%; padding: 10px 12px; border-radius:8px; border:1px solid #374151; background:#0b1020; color:#e2e8f0; }
+    .error { color:#fca5a5; min-height: 18px; }
+    .actions { display:flex; gap:8px; justify-content:flex-end; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Chat – Přihlášení</h1>
+    <a href="/" style="color:#93c5fd;">← Zpět na chat</a>
+  </header>
+
+  <div class="auth-page">
+  <div class="auth-wrap">
+    <div class="tabs">
+      <button id="tab-login" class="active">Přihlášení</button>
+      <button id="tab-register">Registrace</button>
+    </div>
+
+    <form id="form-login" autocomplete="off">
+      <div class="field">
+        <label for="login-nick">Přezdívka</label>
+        <input id="login-nick" maxlength="32" required />
+      </div>
+      <div class="field">
+        <label for="login-pass">Heslo</label>
+        <input id="login-pass" type="password" minlength="6" required />
+      </div>
+      <div class="error" id="login-error"></div>
+      <div class="actions">
+        <button type="submit">Přihlásit se</button>
+      </div>
+    </form>
+
+    <form id="form-register" autocomplete="off" style="display:none;">
+      <div class="field">
+        <label for="reg-nick">Přezdívka</label>
+        <input id="reg-nick" maxlength="32" required />
+      </div>
+      <div class="field">
+        <label for="reg-pass">Heslo (min. 6 znaků)</label>
+        <input id="reg-pass" type="password" minlength="6" required />
+      </div>
+      <div class="error" id="reg-error"></div>
+      <div class="actions">
+        <button type="submit">Registrovat</button>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  <script src="/auth.js"></script>
+</body>
+</html>

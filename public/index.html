@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jednoduchý Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Jednoduchý Chat</h1>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div id="status"><span id="users">0</span> online</div>
+      <button id="btn-settings" title="Nastavení" style="margin-left:12px;">Nastavení</button>
+      <button id="btn-logout" title="Odhlásit">Odhlásit</button>
+    </div>
+  </header>
+
+  <main id="messages" aria-live="polite" aria-label="Seznam zpráv"></main>
+
+  <form id="form" autocomplete="off">
+    <input id="input" placeholder="Napiš zprávu…" maxlength="500" />
+    <button type="submit" aria-label="Odeslat zprávu">Odeslat</button>
+  </form>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Nastavení účtu</h2>
+      <div class="field">
+        <label>Aktuální heslo</label>
+        <input id="set-current-pass" type="password" />
+      </div>
+      <div class="field">
+        <label>Nová přezdívka</label>
+        <input id="set-new-nick" maxlength="32" />
+      </div>
+      <div class="actions">
+        <button id="btn-change-nick">Změnit přezdívku</button>
+      </div>
+      <hr style="border-color:#1f2937; margin:12px 0;" />
+      <div class="field">
+        <label>Nové heslo (min. 6 znaků)</label>
+        <input id="set-new-pass" type="password" minlength="6" />
+      </div>
+      <div class="actions">
+        <button id="btn-change-pass">Změnit heslo</button>
+      </div>
+      <div class="error" id="set-error"></div>
+      <div class="actions">
+        <button id="btn-close-settings" type="button">Zavřít</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+  <script src="/settings.js"></script>
+</body>
+</html>
