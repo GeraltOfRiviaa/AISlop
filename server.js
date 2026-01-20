@@ -36,10 +36,12 @@ function writeJsonSafe(file, data) {
 const users = readJsonSafe(USERS_FILE, {}); // { uid: username }
 let history = readJsonSafe(HISTORY_FILE, []); // [{ from, text, at }]
 // Migrate old messages to ensure they have required fields
-history = history.map(msg => ({
+// Use a base timestamp for messages missing 'at' to preserve relative ordering
+const baseTimestamp = Date.now() - (history.length * 60000); // 1 minute per message back in time
+history = history.map((msg, idx) => ({
   from: msg.from || 'Unknown',
   text: msg.text || '',
-  at: msg.at || Date.now(),
+  at: msg.at || (baseTimestamp + idx * 60000),
   uid: msg.uid || null,
   accountId: msg.accountId || null
 }));
