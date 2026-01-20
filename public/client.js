@@ -25,12 +25,10 @@ function addSystem(msg) {
 
 function addMessage({ from, text, at, uid, accountId }) {
   const wrap = el('div', 'message');
-  const isSelf = (accountId && myAccountId && accountId === myAccountId)
-    || (uid && uid === myUid)
-    || (!uid && from === username);
+  const isSelf = (accountId && myAccountId && accountId === myAccountId);
   if (isSelf) wrap.classList.add('self');
 
-  const meta = el('div', 'meta', `${from} • ${new Date(at).toLocaleTimeString()}`);
+  const meta = el('div', 'meta', `${from} • ${new Date(at).toLocaleString()}`);
   const body = el('div', 'body', text);
   wrap.appendChild(meta);
   wrap.appendChild(body);
@@ -53,6 +51,7 @@ async function bootstrap() {
     myAccountId = data.accountId || '';
     username = data.username;
 
+    messages.innerHTML = '';  // Clear old messages
     if (Array.isArray(data.history)) {
       for (const m of data.history) addMessage(m);
     }
