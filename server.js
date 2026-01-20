@@ -27,12 +27,24 @@ function readJsonSafe(file, fallback) {
 
 function writeJsonSafe(file, data) {
   try {
-    fs.writeFile(file, JSON.stringify(data, null, 2), () => {});
-  } catch (_) {}
+    fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to write file:', file, err);
+  }
 }
 
 const users = readJsonSafe(USERS_FILE, {}); // { uid: username }
 let history = readJsonSafe(HISTORY_FILE, []); // [{ from, text, at }]
+// Migrate old messages to ensure they have required fields
+// Use a base timestamp for messages missing 'at' to preserve relative ordering
+const baseTimestamp = Date.now() - (history.length * 60000); // 1 minute per message back in time
+history = history.map((msg, idx) => ({
+  from: msg.from || 'Unknown',
+  text: msg.text || '',
+  at: msg.at || (baseTimestamp + idx * 60000),
+  uid: msg.uid || null,
+  accountId: msg.accountId || null
+}));
 
 // Accounts store: { [nickLower]: { nickname, pw: "salt:hash", createdAt } }
 const ACCOUNTS_FILE = path.join(DATA_DIR, 'accounts.json');
@@ -197,6 +209,7 @@ app.post('/api/logout', (req, res) => {
     delete users[req.uid];
     writeJsonSafe(USERS_FILE, users);
   }
+  res.clearCookie('uid');  // Clear the cookie
   res.json({ ok: true });
 });
 
@@ -267,7 +280,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat', (msg) => {
-    const text = String(msg || '').trim();
+    const text = String(msg || '').trim().slice(0, 500);  // Enforce 500 char limit
     if (!text) return;
     const payload = { from: username, text, at: Date.now(), uid, accountId };
     history.push(payload);
